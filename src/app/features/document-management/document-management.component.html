@@ -1,0 +1,61 @@
+<div class="doc-management-container">
+  <div class="header">
+    <h2>Gestión de Documentos</h2>
+    <div class="filters">
+      <button (click)="loadDocuments()">Todos</button>
+      <button (click)="loadDocuments('comedor')">Comedor</button>
+      <button (click)="loadDocuments('rrhh')">RRHH</button>
+      <button (click)="loadDocuments('financiero')">Financiero</button>
+    </div>
+  </div>
+
+  <div class="content" *ngIf="!isLoading()">
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Área</th>
+          <th>Estado</th>
+          <th>Indexado el</th>
+          <th>Chunks</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let doc of documents()">
+          <td>
+            <div class="doc-name">
+              <app-icon name="description"></app-icon>
+              <span>{{ doc.name }}</span>
+            </div>
+          </td>
+          <td>{{ doc.area | uppercase }}</td>
+          <td>
+            <app-badge [color]="doc.status === 'indexed' ? 'green' : (doc.status === 'processing' ? 'yellow' : 'red')">
+              {{ doc.status }}
+            </app-badge>
+          </td>
+          <td>{{ doc.indexedAt | date:'medium' }}</td>
+          <td>{{ doc.chunksCount }}</td>
+          <td class="actions">
+            <button class="action-btn" [disabled]="isUpdating() === doc.id" (click)="fileInput.click()">
+              <app-icon name="upload"></app-icon> {{ isUpdating() === doc.id ? 'Subiendo...' : 'Actualizar' }}
+            </button>
+            <input type="file" #fileInput (change)="onFileSelected($event, doc)" style="display: none;" accept=".pdf,.docx,.xlsx,.txt,.md,.zip" />
+            
+            <button class="action-btn delete-btn" (click)="deleteDocument(doc.id)" [disabled]="isUpdating() === doc.id">
+              <app-icon name="delete"></app-icon>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="documents().length === 0">
+          <td colspan="6" class="empty-state">No hay documentos en esta área.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="loading-state" *ngIf="isLoading()">
+    Cargando documentos...
+  </div>
+</div>

@@ -1,0 +1,21 @@
+@import './styles/variables';
+@import './styles/reset';
+@import './styles/typography';
+@import './styles/animations';
+
+// Global utility classes
+.text-xs { font-size: $font-size-xs; }
+.text-sm { font-size: $font-size-sm; }
+.text-base { font-size: $font-size-base; }
+.text-lg { font-size: $font-size-lg; }
+.text-xl { font-size: $font-size-xl; }
+.text-2xl { font-size: $font-size-2xl; }
+
+.font-medium { font-weight: $font-weight-medium; }
+.font-semibold { font-weight: $font-weight-semibold; }
+.font-bold { font-weight: $font-weight-bold; }
+
+.text-gray-500 { color: $gray-500; }
+.text-gray-700 { color: $gray-700; }
+.text-gray-900 { color: $gray-900; }
+.text-kfc-red { color: $kfc-red; }

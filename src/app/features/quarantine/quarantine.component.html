@@ -1,0 +1,78 @@
+<div class="quarantine-container">
+  <div class="header">
+    <h2>Cuarentena de Documentos</h2>
+  </div>
+
+  <div class="content" *ngIf="!isLoading()">
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>Documento</th>
+          <th>Subido por</th>
+          <th>Fecha</th>
+          <th>Motivo de Cuarentena</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let doc of documents()">
+          <td>
+            <div class="doc-name">
+              <app-icon name="warning" class="warning-icon"></app-icon>
+              <span>{{ doc.name }}</span>
+            </div>
+          </td>
+          <td>{{ doc.uploadedBy }}</td>
+          <td>{{ doc.uploadedAt | date:'short' }}</td>
+          <td class="reason-cell">
+            <span class="truncate" [title]="doc.rejectReason">{{ doc.rejectReason }}</span>
+            <button class="text-btn" (click)="viewDetails(doc)">Ver más</button>
+          </td>
+          <td class="actions">
+            <button class="action-btn approve-btn" [disabled]="isProcessing() === (doc.originalBlobName || doc.id)" (click)="approve(doc.originalBlobName || doc.id)">
+              <app-icon name="check"></app-icon> Aprobar
+            </button>
+            <button class="action-btn reject-btn" [disabled]="isProcessing() === (doc.originalBlobName || doc.id)" (click)="reject(doc.originalBlobName || doc.id)">
+              <app-icon name="close"></app-icon> Rechazar
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="documents().length === 0">
+          <td colspan="5" class="empty-state">No hay documentos en cuarentena.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="loading-state" *ngIf="isLoading()">
+    Cargando documentos en cuarentena...
+  </div>
+</div>
+
+<!-- Modal de detalle -->
+<div class="modal-overlay" *ngIf="selectedDoc()" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Detalle de Cuarentena</h3>
+      <button class="close-btn" (click)="closeModal()"><app-icon name="close"></app-icon></button>
+    </div>
+    <div class="modal-body">
+      <div class="detail-row">
+        <strong>Documento:</strong> <span>{{ selectedDoc()?.name }}</span>
+      </div>
+      <div class="detail-row">
+        <strong>Subido por:</strong> <span>{{ selectedDoc()?.uploadedBy }}</span>
+      </div>
+      <div class="detail-row">
+        <strong>Fecha:</strong> <span>{{ selectedDoc()?.uploadedAt | date:'medium' }}</span>
+      </div>
+      <div class="detail-reason">
+        <strong>Hallazgo del Agente Auditor:</strong>
+        <p class="reason-text">{{ selectedDoc()?.rejectReason }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn secondary" (click)="closeModal()">Cerrar</button>
+    </div>
+  </div>
+</div>
