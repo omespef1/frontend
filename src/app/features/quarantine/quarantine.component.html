@@ -19,21 +19,32 @@
           <td>
             <div class="doc-name">
               <app-icon name="warning" class="warning-icon"></app-icon>
-              <span>{{ doc.name }}</span>
+              <div class="doc-info">
+                <span class="file-name" [title]="doc.name">{{ getFileName(doc.name) }}</span>
+                <span class="folder-path" *ngIf="getFolderPath(doc.name)">{{ getFolderPath(doc.name) }}</span>
+              </div>
             </div>
           </td>
-          <td>{{ doc.uploadedBy }}</td>
+          <td>
+            <app-badge [color]="!doc.uploadedBy || doc.uploadedBy.toLowerCase() === 'unknown' ? 'gray' : 'green'">
+              {{ getUploader(doc.uploadedBy) }}
+            </app-badge>
+          </td>
           <td>{{ doc.uploadedAt | date:'short' }}</td>
           <td class="reason-cell">
-            <span class="truncate" [title]="doc.rejectReason">{{ doc.rejectReason }}</span>
-            <button class="text-btn" (click)="viewDetails(doc)">Ver más</button>
+            <div class="reason-content">
+              <app-badge [color]="!doc.rejectReason || doc.rejectReason.toLowerCase() === 'unknown' ? 'gray' : 'yellow'" class="reason-badge">
+                <span class="truncate" [title]="getReason(doc.rejectReason)">{{ getReason(doc.rejectReason) }}</span>
+              </app-badge>
+              <button class="text-btn" (click)="viewDetails(doc)">Ver más</button>
+            </div>
           </td>
           <td class="actions">
-            <button class="action-btn approve-btn" [disabled]="isProcessing() === (doc.originalBlobName || doc.id)" (click)="approve(doc.originalBlobName || doc.id)">
-              <app-icon name="check"></app-icon> Aprobar
+            <button class="icon-btn approve-btn" [disabled]="isProcessing() === (doc.originalBlobName || doc.id)" (click)="approve(doc.originalBlobName || doc.id)" title="Aprobar documento">
+              <app-icon name="check"></app-icon>
             </button>
-            <button class="action-btn reject-btn" [disabled]="isProcessing() === (doc.originalBlobName || doc.id)" (click)="reject(doc.originalBlobName || doc.id)">
-              <app-icon name="close"></app-icon> Rechazar
+            <button class="icon-btn reject-btn" [disabled]="isProcessing() === (doc.originalBlobName || doc.id)" (click)="reject(doc.originalBlobName || doc.id)" title="Rechazar documento">
+              <app-icon name="close"></app-icon>
             </button>
           </td>
         </tr>

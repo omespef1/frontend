@@ -25,6 +25,29 @@ export class QuarantineComponent implements OnInit {
     this.loadDocuments();
   }
 
+  getFileName(fullPath: string): string {
+    if (!fullPath) return '';
+    const parts = fullPath.split('/');
+    return parts[parts.length - 1];
+  }
+
+  getFolderPath(fullPath: string): string {
+    if (!fullPath) return '';
+    const parts = fullPath.split('/');
+    if (parts.length <= 1) return '';
+    return parts.slice(0, parts.length - 1).join('/');
+  }
+
+  getUploader(uploader: string | undefined): string {
+    if (!uploader || uploader.toLowerCase() === 'unknown') return 'Sistema';
+    return uploader;
+  }
+
+  getReason(reason: string | undefined): string {
+    if (!reason || reason.toLowerCase() === 'unknown') return 'Pendiente de revisión';
+    return reason;
+  }
+
   loadDocuments() {
     this.isLoading.set(true);
     this.quarantineService.getQuarantinedDocuments().subscribe({
