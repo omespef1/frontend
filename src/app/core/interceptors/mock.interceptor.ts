@@ -26,17 +26,28 @@ export const mockInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   // Mock for Document Management endpoints
-  if (req.url.includes('/api/knowledge-base/documents')) {
+  if (req.url.includes('/api/search-documents')) {
     if (req.method === 'GET') {
       const urlParams = new URLSearchParams(req.url.split('?')[1]);
       const area = urlParams.get('area');
       const filteredDocs = area ? MOCK_DOCUMENTS.filter(d => d.area.toLowerCase() === area.toLowerCase()) : MOCK_DOCUMENTS;
       
+      // Transform mock data to match the new backend response (SearchDocumentSummaryModel)
+      const mappedDocs = filteredDocs.map(d => ({
+        Area: d.area,
+        FileName: d.name,
+        FileHash: d.fileHash || d.id,
+        IndexedAtUtc: d.indexedAt.toISOString()
+      }));
+
       return of(new HttpResponse({
-        body: filteredDocs,
+        body: mappedDocs,
         status: 200
       })).pipe(delay(500));
     }
+  }
+
+  if (req.url.includes('/api/knowledge-base/documents')) {
 
     if (req.method === 'PUT' || req.method === 'POST') {
       return of(new HttpResponse({

@@ -12,9 +12,7 @@
       <tr>
         <th>Documento</th>
         <th>Área</th>
-        <th>Estado</th>
         <th>Indexado el</th>
-        <th>Chunks</th>
         <th>Acciones</th>
       </tr>
     </thead>
@@ -29,11 +27,7 @@
           </div>
         </td>
         <td>{{ doc.area | uppercase }}</td>
-        <td>
-          <app-badge color="green">{{ doc.status | uppercase }}</app-badge>
-        </td>
         <td>{{ doc.indexedAt | date:'medium' }}</td>
-        <td>{{ doc.chunksCount }}</td>
         <td>
           <div class="actions">
             <input type="file" #fileInput style="display: none;" accept=".pdf,.docx,.md,.txt,.xlsx,.csv,.sql" (change)="onFileSelected($event, doc)">
