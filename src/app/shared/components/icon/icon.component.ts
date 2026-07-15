@@ -111,17 +111,27 @@ import { CommonModule } from '@angular/common';
       </g>
 
       <!-- Close (X) -->
-      <g *ngIf="name === 'x'">
+      <g *ngIf="name === 'x' || name === 'close'">
         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
         <path d="M18 6l-12 12" />
         <path d="M6 6l12 12" />
       </g>
+
+      <!-- Check -->
+      <g *ngIf="name === 'check'">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M5 12l5 5l10 -10" />
+      </g>
     </svg>
   `,
   styles: [`
+    :host {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
     .icon {
-      display: inline-block;
-      vertical-align: middle;
+      display: block;
     }
   `]
 })

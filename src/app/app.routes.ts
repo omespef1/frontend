@@ -12,20 +12,26 @@ export const routes: Routes = [
     loadComponent: () => import('./features/callback/callback.component').then(m => m.CallbackComponent)
   },
   {
-    path: 'chat',
-    loadComponent: () => import('./features/chat/chat.component').then(m => m.ChatComponent),
-    canActivate: [authGuard]
+    path: '',
+    loadComponent: () => import('./core/layout/main-layout/main-layout.component').then(m => m.MainLayoutComponent),
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'chat',
+        loadComponent: () => import('./features/chat/chat.component').then(m => m.ChatComponent)
+      },
+      {
+        path: 'documents',
+        loadComponent: () => import('./features/document-management/document-management.component').then(m => m.DocumentManagementComponent),
+        canActivate: [roleGuard('Supervisor')]
+      },
+      {
+        path: 'quarantine',
+        loadComponent: () => import('./features/quarantine/quarantine.component').then(m => m.QuarantineComponent),
+        canActivate: [roleGuard('SecAdmin')]
+      },
+      { path: '', redirectTo: 'chat', pathMatch: 'full' }
+    ]
   },
-  {
-    path: 'documents',
-    loadComponent: () => import('./features/document-management/document-management.component').then(m => m.DocumentManagementComponent),
-    canActivate: [authGuard, roleGuard('Supervisor')]
-  },
-  {
-    path: 'quarantine',
-    loadComponent: () => import('./features/quarantine/quarantine.component').then(m => m.QuarantineComponent),
-    canActivate: [authGuard, roleGuard('SecAdmin')]
-  },
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' }
 ];

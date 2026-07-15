@@ -18,9 +18,23 @@ export class DocumentManagementComponent implements OnInit {
   documents = signal<KnowledgeDocument[]>([]);
   isLoading = signal<boolean>(true);
   isUpdating = signal<string | null>(null);
+  activeArea = signal<string>('');
 
   ngOnInit() {
-    this.loadDocuments();
+    this.loadDocuments('comedor');
+  }
+
+  getFileName(fullPath: string): string {
+    if (!fullPath) return '';
+    const parts = fullPath.split('/');
+    return parts[parts.length - 1];
+  }
+
+  getFolderPath(fullPath: string): string {
+    if (!fullPath) return '';
+    const parts = fullPath.split('/');
+    if (parts.length <= 1) return '';
+    return parts.slice(0, -1).join('/');
   }
 
   loadDocuments(area?: string) {
