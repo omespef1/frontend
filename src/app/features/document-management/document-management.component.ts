@@ -5,6 +5,8 @@ import { DocumentManagementService } from '../../core/services/document-manageme
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { BadgeComponent } from '../../shared/components/badge/badge.component';
 import { ConfirmModalComponent } from '../../shared/components/confirm-modal/confirm-modal.component';
+import { ToastService } from '../../core/services/toast.service';
+import { GlobalProgressService } from '../../core/services/global-progress.service';
 
 @Component({
   selector: 'app-document-management',
@@ -15,6 +17,8 @@ import { ConfirmModalComponent } from '../../shared/components/confirm-modal/con
 })
 export class DocumentManagementComponent implements OnInit {
   private documentService = inject(DocumentManagementService);
+  private toastService = inject(ToastService);
+  private globalProgressService = inject(GlobalProgressService);
 
   documents = signal<KnowledgeDocument[]>([]);
   isLoading = signal<boolean>(true);
@@ -106,24 +110,37 @@ export class DocumentManagementComponent implements OnInit {
 
     if (action === 'update' && docId && file) {
       this.isUpdating.set(docId);
+      this.globalProgressService.show(); // Show global progress
+      
       this.documentService.updateDocument(docId, file).subscribe({
         next: (res: UploadKnowledgeBaseResponse) => {
-          console.log('Document updated', res);
           this.isUpdating.set(null);
-          this.loadDocuments();
+          this.toastService.show('El documento ha sido enviado exitosamente para su reemplazo. Se está procesando...', 'info');
+          
+          // Simulate NATS processing time before hiding the global progress bar
+          setTimeout(() => {
+            this.globalProgressService.hide();
+            this.toastService.show('Reemplazo finalizado exitosamente.', 'success');
+            this.loadDocuments();
+          }, 4500); 
         },
         error: (err) => {
           console.error('Error updating document', err);
+          this.toastService.show('Ocurrió un error al actualizar el documento.', 'error');
           this.isUpdating.set(null);
+          this.globalProgressService.hide();
         }
       });
     } else if (action === 'delete' && docId) {
       this.documentService.deleteDocument(docId).subscribe({
         next: () => {
-          this.loadDocuments();
+          // Optimistic UI update to remove immediately without F5
+          this.documents.update(docs => docs.filter(d => d.id !== docId));
+          this.toastService.show('El documento fue eliminado exitosamente.', 'success');
         },
         error: (err) => {
           console.error('Error deleting document', err);
+          this.toastService.show('No se pudo eliminar el documento.', 'error');
         }
       });
     }

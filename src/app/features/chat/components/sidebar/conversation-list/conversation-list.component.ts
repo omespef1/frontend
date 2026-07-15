@@ -4,6 +4,7 @@ import { ConversationService } from '../../../../../core/services/conversation.s
 import { ConversationItemComponent } from '../conversation-item/conversation-item.component';
 import { ButtonComponent } from '../../../../../shared/components/button/button.component';
 import { IconComponent } from '../../../../../shared/components/icon/icon.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-conversation-list',
@@ -70,14 +71,19 @@ export class ConversationListComponent {
   conversations = computed(() => this.conversationService.conversations());
   activeId = computed(() => this.conversationService.activeConversationId());
 
-  constructor(private conversationService: ConversationService) {}
+  constructor(
+    private conversationService: ConversationService,
+    private router: Router
+  ) {}
 
   newConversation() {
     this.conversationService.createConversation();
+    this.router.navigate(['/']);
   }
 
   selectConversation(id: string) {
     this.conversationService.activeConversationId.set(id);
+    this.router.navigate(['/']);
   }
 
   deleteConversation(id: string) {
