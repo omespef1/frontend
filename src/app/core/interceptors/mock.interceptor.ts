@@ -45,9 +45,6 @@ export const mockInterceptor: HttpInterceptorFn = (req, next) => {
         status: 200
       })).pipe(delay(500));
     }
-  }
-
-  if (req.url.includes('/api/knowledge-base/documents')) {
 
     if (req.method === 'PUT' || req.method === 'POST') {
       return of(new HttpResponse({

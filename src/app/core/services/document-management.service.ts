@@ -26,13 +26,16 @@ export class DocumentManagementService {
     );
   }
 
-  updateDocument(documentId: string, file: File): Observable<UploadKnowledgeBaseResponse> {
+  updateDocument(documentId: string, file: File, area: string = 'Comedor'): Observable<UploadKnowledgeBaseResponse> {
     const formData = new FormData();
-    formData.append('zipFile', file); // Use same key as upload for consistency
-    return this.http.put<UploadKnowledgeBaseResponse>(`${this.apiUrl}/api/knowledge-base/documents/${documentId}`, formData);
+    formData.append('File', file);
+    formData.append('FileHash', documentId);
+    formData.append('NameArea', area);
+    formData.append('IsAuditable', 'true');
+    return this.http.put<UploadKnowledgeBaseResponse>(`${this.apiUrl}/api/search-documents/replace`, formData);
   }
 
   deleteDocument(documentId: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/api/knowledge-base/documents/${documentId}`);
+    return this.http.delete<void>(`${this.apiUrl}/api/search-documents/${documentId}`);
   }
 }

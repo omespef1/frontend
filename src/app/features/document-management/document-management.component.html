@@ -52,4 +52,13 @@
   <div *ngIf="!isLoading() && documents().length === 0" class="empty-state">
     No se encontraron documentos en esta área.
   </div>
+
+  <app-confirm-modal
+    *ngIf="showModal()"
+    [title]="modalTitle()"
+    [message]="modalMessage()"
+    [confirmVariant]="modalVariant()"
+    (confirm)="executePendingAction()"
+    (cancel)="closeModal()">
+  </app-confirm-modal>
 </div>
