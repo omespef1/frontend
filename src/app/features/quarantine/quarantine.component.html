@@ -87,3 +87,12 @@
     </div>
   </div>
 </div>
+
+<app-confirm-modal
+  *ngIf="showConfirmModal()"
+  [title]="confirmModalTitle()"
+  [message]="confirmModalMessage()"
+  [confirmVariant]="confirmModalVariant()"
+  (confirm)="executePendingAction()"
+  (cancel)="closeConfirmModal()">
+</app-confirm-modal>
