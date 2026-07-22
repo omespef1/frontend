@@ -17,6 +17,7 @@ interface ChatRequest {
   question: string;
   sessionId: string;
   conversationId?: string;
+  userRole?: string;
 }
 
 @Injectable({
@@ -36,7 +37,8 @@ export class ChatService {
 
       const body: ChatRequest = {
         question,
-        sessionId: crypto.randomUUID()
+        sessionId: crypto.randomUUID(),
+        userRole: this.authService.userRole() || 'Supervisor'
       };
 
       // SSE via fetch

@@ -10,12 +10,18 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = authService.getToken();
 
   let requestToForward = req;
+  const mockUser = authService.currentMockUser();
+  
+  let headers = req.headers;
   if (token) {
-    requestToForward = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+    headers = headers.set('Authorization', `Bearer ${token}`);
+  }
+  if (mockUser) {
+    headers = headers.set('X-Mock-User', mockUser);
+  }
+  
+  if (token || mockUser) {
+    requestToForward = req.clone({ headers });
   }
   
   return next(requestToForward).pipe(

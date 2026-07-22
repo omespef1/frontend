@@ -22,7 +22,9 @@ export class QuarantineService {
 
   rejectDocument(documentId: string, reason: string): Observable<void> {
     const encodedId = encodeURIComponent(documentId);
-    return this.http.delete<void>(`${this.apiUrl}/api/knowledge-base/quarantine/${encodedId}`);
+    return this.http.delete<void>(`${this.apiUrl}/api/knowledge-base/quarantine/${encodedId}`, {
+      params: reason ? { reason } : {}
+    });
   }
 
   getPendingCount(): Observable<number> {

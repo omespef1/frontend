@@ -22,6 +22,7 @@ export class AuthService {
   currentUser = signal<User | null>(null);
   userRole = signal<UserRole | null>(null);
   isAuthenticated = signal<boolean>(false);
+  currentMockUser = signal<string>('');
 
   private tokenKey = 'kfc_era_token';
   private refreshTokenKey = 'kfc_era_refresh_token';
@@ -133,5 +134,23 @@ export class AuthService {
 
   getToken(): string | null {
     return sessionStorage.getItem(this.tokenKey);
+  }
+
+  /**
+   * Permite cambiar el rol activo del usuario sin re-autenticación.
+   * Uso temporal mientras HERA no proporcione roles reales.
+   */
+  switchRole(newRole: UserRole): void {
+    this.userRole.set(newRole);
+    const user = this.currentUser();
+    if (user) {
+      const updatedUser = { ...user, role: newRole };
+      this.currentUser.set(updatedUser);
+      sessionStorage.setItem('kfc_current_user', JSON.stringify(updatedUser));
+    }
+  }
+
+  setMockUser(email: string): void {
+    this.currentMockUser.set(email);
   }
 }
