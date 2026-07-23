@@ -83,6 +83,7 @@ export class MessageListComponent implements AfterViewChecked {
   
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
   private isNearBottom = true;
+  private lastScrollTop = 0;
 
   constructor(public authService: AuthService) {}
 
@@ -94,15 +95,26 @@ export class MessageListComponent implements AfterViewChecked {
 
   onScroll(event: Event) {
     const element = event.target as HTMLElement;
-    const threshold = 150; // threshold in pixels
-    const position = element.scrollTop + element.offsetHeight;
-    const height = element.scrollHeight;
-    this.isNearBottom = height - position < threshold;
+    const currentScrollTop = element.scrollTop;
+    
+    if (currentScrollTop < this.lastScrollTop) {
+      // User scrolled up, disable auto-scroll
+      this.isNearBottom = false;
+    } else {
+      // User scrolled down, check if they reached the bottom
+      const threshold = 50;
+      const position = currentScrollTop + element.offsetHeight;
+      const height = element.scrollHeight;
+      this.isNearBottom = height - position <= threshold;
+    }
+    
+    this.lastScrollTop = currentScrollTop;
   }
 
   private scrollToBottom(): void {
     try {
       this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
+      this.lastScrollTop = this.scrollContainer.nativeElement.scrollTop;
     } catch(err) { }
   }
 }

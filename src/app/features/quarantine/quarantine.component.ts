@@ -62,6 +62,14 @@ export class QuarantineComponent implements OnInit {
     return reason;
   }
 
+  ensureUtc(dateStr: string | undefined | null): string {
+    if (!dateStr) return '';
+    if (dateStr.includes('T') && !dateStr.endsWith('Z') && !dateStr.match(/[+-]\d{2}:\d{2}$/)) {
+      return dateStr + 'Z';
+    }
+    return dateStr;
+  }
+
   loadDocuments() {
     this.isLoading.set(true);
     this.quarantineService.getQuarantinedDocuments().subscribe({

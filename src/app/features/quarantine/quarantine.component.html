@@ -30,7 +30,7 @@
               {{ getUploader(doc.uploadedBy) }}
             </app-badge>
           </td>
-          <td>{{ doc.uploadedAt | date:'short' }}</td>
+          <td>{{ ensureUtc(doc.uploadedAt) | date:'short' }}</td>
           <td class="reason-cell">
             <div class="reason-content">
               <app-badge [color]="!doc.rejectReason || doc.rejectReason.toLowerCase() === 'unknown' ? 'gray' : 'yellow'" class="reason-badge">
@@ -75,7 +75,7 @@
         <strong>Subido por:</strong> <span>{{ selectedDoc()?.uploadedBy }}</span>
       </div>
       <div class="detail-row">
-        <strong>Fecha:</strong> <span>{{ selectedDoc()?.uploadedAt | date:'medium' }}</span>
+        <strong>Fecha:</strong> <span>{{ ensureUtc(selectedDoc()?.uploadedAt) | date:'medium' }}</span>
       </div>
       <div class="detail-reason">
         <strong>Hallazgo del Agente Auditor:</strong>
