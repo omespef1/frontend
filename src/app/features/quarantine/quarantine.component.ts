@@ -62,12 +62,30 @@ export class QuarantineComponent implements OnInit {
     return reason;
   }
 
-  ensureUtc(dateStr: string | undefined | null): string {
-    if (!dateStr) return '';
-    if (dateStr.includes('T') && !dateStr.endsWith('Z') && !dateStr.match(/[+-]\d{2}:\d{2}$/)) {
-      return dateStr + 'Z';
+  ensureUtc(dateValue: string | Date | undefined | null): Date | string | null {
+    if (!dateValue) return null;
+    
+    if (typeof dateValue === 'string') {
+      if (dateValue.includes('T') && !dateValue.endsWith('Z') && !dateValue.match(/[+-]\d{2}:\d{2}$/)) {
+        return dateValue + 'Z';
+      }
+      return dateValue;
     }
-    return dateStr;
+
+    if (dateValue instanceof Date) {
+      // Si la fecha se parseó como local pero venía en UTC, la reconstruimos
+      return new Date(Date.UTC(
+        dateValue.getFullYear(),
+        dateValue.getMonth(),
+        dateValue.getDate(),
+        dateValue.getHours(),
+        dateValue.getMinutes(),
+        dateValue.getSeconds(),
+        dateValue.getMilliseconds()
+      ));
+    }
+
+    return dateValue;
   }
 
   loadDocuments() {
