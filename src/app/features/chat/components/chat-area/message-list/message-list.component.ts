@@ -10,7 +10,7 @@ import { AuthService } from '../../../../../core/services/auth.service';
   standalone: true,
   imports: [CommonModule, MessageBubbleComponent, TypingIndicatorComponent],
   template: `
-    <div class="message-list-container" #scrollContainer>
+    <div class="message-list-container" #scrollContainer (scroll)="onScroll($event)">
       <app-message-bubble 
         *ngFor="let msg of messages"
         [message]="msg"
@@ -44,7 +44,6 @@ import { AuthService } from '../../../../../core/services/auth.service';
       padding: 1rem 0;
       height: 100%;
       overflow-y: auto;
-      scroll-behavior: smooth;
     }
     .typing-wrapper {
       display: flex;
@@ -83,11 +82,22 @@ export class MessageListComponent implements AfterViewChecked {
   @Input() isTyping = false;
   
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
-  
+  private isNearBottom = true;
+
   constructor(public authService: AuthService) {}
 
   ngAfterViewChecked() {
-    this.scrollToBottom();
+    if (this.isNearBottom) {
+      this.scrollToBottom();
+    }
+  }
+
+  onScroll(event: Event) {
+    const element = event.target as HTMLElement;
+    const threshold = 150; // threshold in pixels
+    const position = element.scrollTop + element.offsetHeight;
+    const height = element.scrollHeight;
+    this.isNearBottom = height - position < threshold;
   }
 
   private scrollToBottom(): void {

@@ -8,7 +8,7 @@
     margin-bottom: 24px;
     h2 {
       margin: 0;
-      color: var(--kfc-text-primary);
+      color: var(--kfc-text-primary, #111827);
     }
   }
 
@@ -40,7 +40,7 @@
     .text-btn {
       background: none;
       border: none;
-      color: var(--kfc-primary);
+      color: var(--kfc-primary, #e60000);
       font-size: 12px;
       font-weight: 500;
       cursor: pointer;
@@ -67,7 +67,7 @@
 }
 
 .modal-content {
-  background: var(--kfc-surface);
+  background: var(--kfc-surface, #ffffff);
   width: 500px;
   max-width: 90vw;
   border-radius: 8px;
@@ -78,13 +78,13 @@
     justify-content: space-between;
     align-items: center;
     padding: 16px 24px;
-    border-bottom: 1px solid var(--kfc-border);
+    border-bottom: 1px solid var(--kfc-border, #e5e7eb);
     
     h3 { margin: 0; }
     
     .close-btn {
       background: none; border: none; cursor: pointer;
-      color: var(--kfc-text-secondary);
+      color: var(--kfc-text-secondary, #6b7280);
     }
   }
   
@@ -93,7 +93,10 @@
     
     .detail-row {
       margin-bottom: 12px;
-      strong { display: inline-block; width: 120px; }
+      display: flex;
+      align-items: flex-start;
+      strong { display: inline-block; width: 120px; flex-shrink: 0; color: var(--kfc-text-primary, #111827); }
+      span { flex: 1; word-break: break-all; color: var(--kfc-text-secondary, #4b5563); }
     }
     
     .detail-reason {
@@ -105,18 +108,22 @@
         padding: 12px;
         margin-top: 8px;
         border-radius: 4px;
+        word-break: break-word;
+        white-space: pre-wrap;
+        color: var(--kfc-text-primary, #111827);
       }
     }
   }
   
   .modal-footer {
     padding: 16px 24px;
-    border-top: 1px solid var(--kfc-border);
+    border-top: 1px solid var(--kfc-border, #e5e7eb);
     text-align: right;
     
     .btn.secondary {
-      background: var(--kfc-surface-alt);
-      border: 1px solid var(--kfc-border);
+      background: var(--kfc-surface-alt, #f9fafb);
+      border: 1px solid var(--kfc-border, #e5e7eb);
+      color: var(--kfc-text-primary, #111827);
       padding: 8px 16px;
       border-radius: 4px;
       cursor: pointer;
